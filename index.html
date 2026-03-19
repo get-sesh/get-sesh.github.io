@@ -21,7 +21,11 @@
   <meta name="twitter:description" content="Someone shared browser tabs with you. Open them all at once, privacy-first.">
   <meta name="twitter:image" content="https://get-sesh.github.io/og-image.png">
 
-  <link rel="stylesheet" href="style.css?v=11">
+  <link rel="stylesheet" href="style.css">
+  <script>
+    // Auto cache-bust: reload CSS and JS with current timestamp if stale
+    document.querySelector('link[rel="stylesheet"]').href = 'style.css?t=' + Date.now();
+  </script>
 </head>
 <body>
 
@@ -74,6 +78,11 @@
 <div class="toast" id="toast"></div>
 
 <script src="lib/lz-string.min.js"></script>
-<script src="app.js?v=11"></script>
+<script>
+  // Auto cache-bust app.js
+  var s = document.createElement('script');
+  s.src = 'app.js?t=' + Date.now();
+  document.body.appendChild(s);
+</script>
 </body>
 </html>
