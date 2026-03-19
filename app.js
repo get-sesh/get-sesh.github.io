@@ -353,8 +353,22 @@ function fallbackOpen(session) {
   const tabs = session.tabs || [];
   const urls = session.urls || [];
   const allUrls = tabs.length > 0 ? tabs.map(t => t.url) : urls;
-  allUrls.forEach(url => window.open(url, '_blank'));
-  showToast('Tabs opened!');
+
+  // On mobile, opening multiple tabs gets blocked by popup blockers
+  const isMobile = /iPhone|iPad|Android|Mobile/i.test(navigator.userAgent);
+
+  if (isMobile) {
+    // Open just the first tab, show a message about the rest
+    if (allUrls.length > 0) {
+      window.open(allUrls[0], '_blank');
+    }
+    if (allUrls.length > 1) {
+      showToast(`Opened 1 tab. Tap the other ${allUrls.length - 1} links individually on mobile.`);
+    }
+  } else {
+    allUrls.forEach(url => window.open(url, '_blank'));
+    showToast('Tabs opened!');
+  }
 }
 
 // ─── Error state ─────────────────────────────────────────────────────────────

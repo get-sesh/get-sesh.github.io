@@ -663,6 +663,28 @@ footer .line {
     padding: 16px 0 0;
   }
 
+  /* Bigger touch targets for mobile */
+  .group-header {
+    padding: 14px 4px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .expand-btn {
+    padding: 8px 14px;
+    font-size: 13px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .open-btn {
+    padding: 12px 28px;
+    font-size: 15px;
+  }
+
+  /* Hide install hint on mobile — can't install extensions */
+  .confirm-install {
+    display: none;
+  }
+
   footer {
     padding: 16px 24px;
   }
