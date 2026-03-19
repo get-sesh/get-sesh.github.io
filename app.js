@@ -376,7 +376,7 @@ function showError(msg) {
 }
 
 // ─── Init ────────────────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
+function initSesh() {
   initTheme();
 
   const session = parseSession();
@@ -386,4 +386,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   render(session);
-});
+}
+
+// Support both direct load and dynamic load
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initSesh);
+} else {
+  // DOM already ready (loaded dynamically)
+  initSesh();
+}
