@@ -198,6 +198,17 @@ function render(session) {
 }
 
 function createTabRow(tab) {
+  // Detect nested sesh links
+  if (tab.url && tab.url.includes('get-sesh.github.io')) {
+    const a = document.createElement('a');
+    a.className = 'nested-row';
+    a.href = tab.url;
+    a.target = '_blank';
+    const title = tab.title || 'Shared Session';
+    a.innerHTML = `${externalLinkSVG}<span class="label">${esc(title)}</span><span class="badge">sesh</span>`;
+    return a;
+  }
+
   const a = document.createElement('a');
   a.className = 'tab-row';
   a.href = tab.url;
