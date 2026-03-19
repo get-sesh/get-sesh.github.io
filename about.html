@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — Sesh</title>
+  <meta name="description" content="Sesh is a free, privacy-first Chrome extension for saving and sharing browser tab sessions.">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .about-content {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 80px 24px 60px;
+    }
+    .about-content .brand {
+      font-family: var(--serif);
+      font-size: 32px;
+      font-weight: 700;
+      font-style: italic;
+      color: var(--text);
+      margin-bottom: 48px;
+      display: block;
+    }
+    .about-content p {
+      font-family: var(--sans);
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--text);
+      margin-bottom: 24px;
+    }
+    .about-content p.signature {
+      margin-top: 48px;
+      font-size: 15px;
+      color: var(--text-muted);
+    }
+    .about-content a {
+      color: var(--text);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .about-content a:hover {
+      opacity: 0.6;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--text-muted);
+      text-decoration: none;
+      margin-bottom: 40px;
+      transition: color 0.15s;
+    }
+    .back-btn:hover { color: var(--text); }
+    #privacy {
+      margin-top: 60px;
+      padding-top: 24px;
+      border-top: 1px solid var(--divider);
+    }
+    #privacy h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    #privacy p {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+<div class="gradient"></div>
+
+<div class="page">
+  <span class="theme-toggle" id="theme-toggle" onclick="toggleTheme()">☀</span>
+
+  <div class="about-content">
+    <a class="back-btn" href="javascript:history.back()">← Back</a>
+
+    <span class="brand">Sesh</span>
+
+    <p>There was a time when sharing meant just... sharing. You had tabs open, your friend needed them, you sent them over. Done.</p>
+
+    <p>No account. No cloud sync. No "upgrade to share with more than 3 people." Just links, passed from one browser to another.</p>
+
+    <p>Things have changed. And honestly, not all of it is bad. Session managers exist, bookmark syncing works, and browser profiles keep your work and life separate. These are real problems that deserve real solutions.</p>
+
+    <p>But I also think some tools should just exist. A way to save your tabs, share them with someone, and not worry about where that data goes. No server. No tracking. No account. Your tabs stay in your browser. When you share, the data lives in the link itself — nowhere else.</p>
+
+    <p>Not everything needs to be a business. Some things can just exist.</p>
+
+    <p>So this one's free.</p>
+
+    <p class="signature">
+      Made by <a href="#">Tanay</a>, inspired by <a href="https://grainrad.com/about">Aleem</a>
+    </p>
+
+    <div id="privacy">
+      <h2>Privacy</h2>
+      <p>Sesh stores your sessions locally in your browser using Chrome's storage API. Nothing is sent to any server. When you share a session, all the data is compressed and encoded directly into the URL — the link IS the data. No server ever sees your tabs. The source code is open for anyone to verify.</p>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <footer>
+    <div class="line"></div>
+    <a href="about.html">About Sesh</a>
+    <span style="font-size:11px;color:var(--footer-text)">© 2026 Sesh</span>
+    <a href="#privacy">Privacy</a>
+  </footer>
+</div>
+
+<script>
+function initTheme() {
+  const saved = localStorage.getItem('sesh-theme');
+  if (saved === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  updateToggle();
+}
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next === 'light' ? '' : 'dark');
+  localStorage.setItem('sesh-theme', next);
+  updateToggle();
+}
+function updateToggle() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.getElementById('theme-toggle').textContent = isDark ? '☾' : '☀';
+}
+initTheme();
+</script>
+</body>
+</html>

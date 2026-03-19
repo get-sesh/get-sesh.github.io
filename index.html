@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sesh — Shared Session</title>
+  <meta name="description" content="Someone shared browser tabs with you via Sesh. Privacy-first tab sharing.">
+  <link rel="stylesheet" href="style.css?v=7">
+</head>
+<body>
+
+<div class="gradient"></div>
+
+<div class="page">
+  <div class="top-left" id="timestamp"></div>
+
+  <div class="cta-bar">
+    <span class="cta-text">Share links, privacy first</span>
+    <a class="cta-btn" href="about.html">Try Sesh →</a>
+  </div>
+
+  <span class="theme-toggle" id="theme-toggle" onclick="toggleTheme()">☀</span>
+
+  <div id="content-area">
+    <div class="hero">
+      <h1 id="session-name">Shared Session</h1>
+      <div class="sub" id="shared-by">Someone shared tabs with you</div>
+    </div>
+
+    <div class="card">
+      <div class="card-inner">
+        <div class="card-top">
+          <span class="card-meta" id="card-meta"></span>
+          <button class="expand-btn" id="expand-all">Expand all</button>
+        </div>
+        <div class="divider"></div>
+        <div id="groups-container"></div>
+        <div class="divider"></div>
+        <div class="open-btn-wrap">
+          <button class="open-btn" id="open-all">Open all tabs</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="shared-via">Shared via <a href="about.html">Sesh</a></div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <footer>
+    <div class="line"></div>
+    <a href="about.html">About Sesh</a>
+    <span style="font-size:11px;color:var(--footer-text)">© 2026 Sesh</span>
+    <a href="about.html#privacy">Privacy</a>
+  </footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="lib/lz-string.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

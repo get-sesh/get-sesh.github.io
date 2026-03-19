@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sesh — Test Link Generator</title>
+  <style>
+    body { font-family: system-ui; max-width: 600px; margin: 40px auto; padding: 0 20px; }
+    textarea { width: 100%; height: 200px; margin: 10px 0; font-family: monospace; font-size: 12px; }
+    button { padding: 8px 16px; margin: 4px; cursor: pointer; }
+    a { display: block; margin: 10px 0; word-break: break-all; }
+    .size { color: #888; font-size: 13px; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Sesh Test Link Generator</h1>
+  <p>Edit the JSON below and click "Generate Link" to create a test share URL.</p>
+
+  <textarea id="json">{
+  "name": "Work Projects",
+  "sender": "Tanay",
+  "ts": 1710700000000,
+  "tabs": [
+    {"url": "https://react.dev", "title": "React Documentation", "groupName": "Frontend", "groupColor": "blue"},
+    {"url": "https://tailwindcss.com", "title": "Tailwind CSS — Utility-First", "groupName": "Frontend", "groupColor": "blue"},
+    {"url": "https://github.com", "title": "GitHub — myproject/frontend", "groupName": "Frontend", "groupColor": "blue"},
+    {"url": "https://supabase.com/dashboard", "title": "Supabase Dashboard", "groupName": "Backend", "groupColor": "green"},
+    {"url": "https://vercel.com/dashboard", "title": "Vercel — Deployments", "groupName": "Backend", "groupColor": "green"}
+  ]
+}</textarea>
+
+  <button onclick="generate()">Generate Link</button>
+  <button onclick="generateLarge()">Generate Large (50 tabs)</button>
+
+  <div id="output"></div>
+
+  <script src="lib/lz-string.min.js"></script>
+  <script>
+    function generate() {
+      const json = document.getElementById('json').value;
+      try {
+        JSON.parse(json); // validate
+      } catch(e) {
+        document.getElementById('output').innerHTML = `<p style="color:red">Invalid JSON: ${e.message}</p>`;
+        return;
+      }
+
+      const compressed = LZString.compressToEncodedURIComponent(json);
+      const url = `index.html#${compressed}`;
+      const fullUrl = `${location.origin}${location.pathname.replace('test.html', '')}${url}`;
+
+      document.getElementById('output').innerHTML = `
+        <a href="${url}" target="_blank">Open Share Page →</a>
+        <div class="size">
+          Raw JSON: ${json.length} bytes<br>
+          Compressed hash: ${compressed.length} chars<br>
+          Full URL: ${fullUrl.length} chars<br>
+          Fits on all platforms: ${fullUrl.length < 8000 ? '✅ Yes' : '❌ Too long'}
+        </div>
+      `;
+    }
+
+    function generateLarge() {
+      const sites = [
+        'react.dev', 'tailwindcss.com', 'github.com', 'supabase.com', 'vercel.com',
+        'nextjs.org', 'prisma.io', 'planetscale.com', 'fly.io', 'render.com',
+        'stackoverflow.com', 'developer.mozilla.org', 'npmjs.com', 'bundlephobia.com',
+        'caniuse.com', 'typescript-lang.org', 'eslint.org', 'prettier.io', 'vitejs.dev',
+        'esbuild.github.io', 'swc.rs', 'deno.land', 'bun.sh', 'nodejs.org', 'expressjs.com'
+      ];
+      const groups = ['Frontend', 'Backend', 'DevOps', 'Docs', 'Tools'];
+      const tabs = [];
+      for (let i = 0; i < 50; i++) {
+        const site = sites[i % sites.length];
+        tabs.push({
+          url: `https://${site}`,
+          title: `${site.split('.')[0].charAt(0).toUpperCase() + site.split('.')[0].slice(1)} — Page ${i + 1}`,
+          groupName: groups[i % groups.length],
+          groupColor: ['blue', 'green', 'yellow', 'purple', 'cyan'][i % 5]
+        });
+      }
+      document.getElementById('json').value = JSON.stringify({
+        name: "Big Research Session",
+        sender: "Tanay",
+        ts: Date.now(),
+        tabs
+      }, null, 2);
+      generate();
+    }
+  </script>
+</body>
+</html>
