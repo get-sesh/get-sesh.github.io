@@ -143,14 +143,15 @@ function render(session) {
       const header = document.createElement('div');
       header.className = 'group-header';
       header.innerHTML = `${chevronSVG}<span class="count">${group.tabs.length}</span><span class="label">${esc(group.name)}</span>`;
-      // Store toggle function globally so inline onclick can access it
-      window[`_toggleGroup_${groupId}`] = () => {
+      // Store toggle function globally with safe key
+      const toggleKey = `_tg${i}`;
+      window[toggleKey] = () => {
         groupStates[groupId] = !groupStates[groupId];
         renderGroupState(groupId, groupStates[groupId]);
         updateExpandAll(groupStates);
       };
-      header.setAttribute('onclick', `window._toggleGroup_${groupId}()`);
-      header.addEventListener('click', window[`_toggleGroup_${groupId}`]);
+      header.setAttribute('onclick', `window.${toggleKey}()`);
+      header.addEventListener('click', window[toggleKey]);
       groupEl.appendChild(header);
 
       // Tabs
