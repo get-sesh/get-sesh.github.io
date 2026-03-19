@@ -21,7 +21,7 @@
   <meta name="twitter:description" content="Someone shared browser tabs with you. Open them all at once, privacy-first.">
   <meta name="twitter:image" content="https://get-sesh.github.io/og-image.png">
 
-  <link rel="stylesheet" href="style.css?v=10">
+  <link rel="stylesheet" href="style.css?v=11">
 </head>
 <body>
 
@@ -47,7 +47,7 @@
       <div class="card-inner">
         <div class="card-top">
           <span class="card-meta" id="card-meta"></span>
-          <button class="expand-btn" id="expand-all">Expand all</button>
+          <button class="expand-btn" id="expand-all" onclick="window._toggleExpandAll && window._toggleExpandAll()">Expand all</button>
         </div>
         <div class="divider"></div>
         <div id="groups-container"></div>
