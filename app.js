@@ -260,13 +260,8 @@ function openAllTabs(session) {
   const groups = getGroups(session);
   const groupCount = groups.filter(g => g.name).length;
 
-  // Check for extension — try a quick ping
-  let extensionDetected = false;
-  try {
-    if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.sendMessage) {
-      extensionDetected = true;
-    }
-  } catch {}
+  // Don't check for extension here — we'll try at open time
+  const extensionDetected = false;
 
   // Build confirmation dialog
   const overlay = document.createElement('div');
@@ -328,26 +323,22 @@ function doOpenTabs(session) {
     urls: session.urls || []
   };
 
-  // Try extension bridge
+  // Try extension bridge — wrapped defensively so errors never break the page
   try {
-    if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.sendMessage) {
-      console.log('[Sesh] Attempting extension bridge with ID:', EXTENSION_ID);
-      chrome.runtime.sendMessage(EXTENSION_ID, payload, (response) => {
-        if (chrome.runtime.lastError) {
-          console.log('[Sesh] Extension not available:', chrome.runtime.lastError.message);
+    if (typeof chrome !== 'undefined' && chrome.runtime) {
+      chrome.runtime.sendMessage(EXTENSION_ID, payload, function(response) {
+        // Check for errors silently
+        var err = chrome.runtime && chrome.runtime.lastError;
+        if (err || !response || !response.success) {
           fallbackOpen(session);
-        } else if (response && response.success) {
-          console.log('[Sesh] Extension opened tabs with groups');
-          showToast(`Opened "${session.name}" with tab groups`);
         } else {
-          console.log('[Sesh] Extension responded but failed:', response);
-          fallbackOpen(session);
+          showToast('Opened "' + session.name + '" with tab groups');
         }
       });
       return;
     }
-  } catch (err) {
-    console.log('[Sesh] Extension bridge error:', err);
+  } catch (e) {
+    // Extension not available — fall through
   }
 
   fallbackOpen(session);
