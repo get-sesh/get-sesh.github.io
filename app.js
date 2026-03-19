@@ -388,10 +388,4 @@ function initSesh() {
   render(session);
 }
 
-// Support both direct load and dynamic load
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initSesh);
-} else {
-  // DOM already ready (loaded dynamically)
-  initSesh();
-}
+// initSesh is called from index.html's script onload callback
