@@ -151,7 +151,6 @@ function render(session) {
         updateExpandAll(groupStates);
       };
       header.setAttribute('onclick', `window.${toggleKey}()`);
-      header.addEventListener('click', window[toggleKey]);
       groupEl.appendChild(header);
 
       // Tabs
@@ -192,7 +191,6 @@ function render(session) {
     }
     updateExpandAll(groupStates);
   };
-  expandBtn.addEventListener('click', window._toggleExpandAll);
   updateExpandAll(groupStates);
 
   // Open all button
