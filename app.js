@@ -180,18 +180,22 @@ function render(session) {
     }
   }
 
-  // Expand all button
+  // Expand all button — hide if no groups
   const expandBtn = document.getElementById('expand-all');
-  window._toggleExpandAll = () => {
-    const anyOpen = Object.values(groupStates).some(v => v);
-    const newState = !anyOpen;
-    for (const k of Object.keys(groupStates)) {
-      groupStates[k] = newState;
-      renderGroupState(k, newState);
-    }
+  if (Object.keys(groupStates).length === 0) {
+    expandBtn.style.display = 'none';
+  } else {
+    window._toggleExpandAll = () => {
+      const anyOpen = Object.values(groupStates).some(v => v);
+      const newState = !anyOpen;
+      for (const k of Object.keys(groupStates)) {
+        groupStates[k] = newState;
+        renderGroupState(k, newState);
+      }
+      updateExpandAll(groupStates);
+    };
     updateExpandAll(groupStates);
-  };
-  updateExpandAll(groupStates);
+  }
 
   // Open all button
   document.getElementById('open-all').onclick = () => openAllTabs(session);
