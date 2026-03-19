@@ -3,7 +3,7 @@
 // Communicates with the Sesh Chrome extension for tab group support.
 
 // TODO: Replace with actual extension ID after publishing to Chrome Web Store
-const EXTENSION_ID = 'REPLACE_WITH_EXTENSION_ID';
+const EXTENSION_ID = 'gpalkohoegdcceblmhibionnphpjnjfp';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 function esc(str) {
