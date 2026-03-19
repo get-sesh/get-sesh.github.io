@@ -245,7 +245,13 @@ function openAllTabs(session) {
   const groups = getGroups(session);
   const groupCount = groups.filter(g => g.name).length;
 
-  const hasExtension = typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.sendMessage;
+  // Check for extension — try a quick ping
+  let extensionDetected = false;
+  try {
+    if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.sendMessage) {
+      extensionDetected = true;
+    }
+  } catch {}
 
   // Build confirmation dialog
   const overlay = document.createElement('div');
@@ -253,7 +259,7 @@ function openAllTabs(session) {
 
   let groupText = groupCount > 0 ? ` in ${groupCount} group${groupCount !== 1 ? 's' : ''}` : '';
   let installHtml = '';
-  if (!hasExtension) {
+  if (!extensionDetected) {
     installHtml = `
       <div class="confirm-install">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:var(--text-faint)"><path d="M15.6 2.7a10 10 0 1 0 5.7 5.7"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
@@ -295,11 +301,11 @@ function openAllTabs(session) {
   overlay.querySelector('.confirm-open').onclick = () => {
     overlay.classList.remove('show');
     setTimeout(() => overlay.remove(), 200);
-    doOpenTabs(session, hasExtension);
+    doOpenTabs(session);
   };
 }
 
-function doOpenTabs(session, hasExtension) {
+function doOpenTabs(session) {
   const payload = {
     action: 'openSession',
     name: session.name,
@@ -307,17 +313,26 @@ function doOpenTabs(session, hasExtension) {
     urls: session.urls || []
   };
 
-  if (hasExtension) {
-    try {
+  // Try extension bridge
+  try {
+    if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.sendMessage) {
+      console.log('[Sesh] Attempting extension bridge with ID:', EXTENSION_ID);
       chrome.runtime.sendMessage(EXTENSION_ID, payload, (response) => {
-        if (chrome.runtime.lastError || !response || !response.success) {
+        if (chrome.runtime.lastError) {
+          console.log('[Sesh] Extension not available:', chrome.runtime.lastError.message);
           fallbackOpen(session);
-        } else {
+        } else if (response && response.success) {
+          console.log('[Sesh] Extension opened tabs with groups');
           showToast(`Opened "${session.name}" with tab groups`);
+        } else {
+          console.log('[Sesh] Extension responded but failed:', response);
+          fallbackOpen(session);
         }
       });
       return;
-    } catch {}
+    }
+  } catch (err) {
+    console.log('[Sesh] Extension bridge error:', err);
   }
 
   fallbackOpen(session);
