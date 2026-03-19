@@ -143,11 +143,14 @@ function render(session) {
       const header = document.createElement('div');
       header.className = 'group-header';
       header.innerHTML = `${chevronSVG}<span class="count">${group.tabs.length}</span><span class="label">${esc(group.name)}</span>`;
-      header.onclick = () => {
+      const toggleFn = (e) => {
+        e.preventDefault();
         groupStates[groupId] = !groupStates[groupId];
         renderGroupState(groupId, groupStates[groupId]);
         updateExpandAll(groupStates);
       };
+      header.addEventListener('click', toggleFn);
+      header.addEventListener('touchend', toggleFn);
       groupEl.appendChild(header);
 
       // Tabs
@@ -179,7 +182,8 @@ function render(session) {
 
   // Expand all button
   const expandBtn = document.getElementById('expand-all');
-  expandBtn.onclick = () => {
+  const expandToggleFn = (e) => {
+    e.preventDefault();
     const anyOpen = Object.values(groupStates).some(v => v);
     const newState = !anyOpen;
     for (const k of Object.keys(groupStates)) {
@@ -188,6 +192,8 @@ function render(session) {
     }
     updateExpandAll(groupStates);
   };
+  expandBtn.addEventListener('click', expandToggleFn);
+  expandBtn.addEventListener('touchend', expandToggleFn);
   updateExpandAll(groupStates);
 
   // Open all button
