@@ -22,10 +22,9 @@
   <meta name="twitter:image" content="https://get-sesh.github.io/og-image.png">
 
   <link rel="stylesheet" href="style.css">
-  <script>
-    // Auto cache-bust: reload CSS and JS with current timestamp if stale
-    document.querySelector('link[rel="stylesheet"]').href = 'style.css?t=' + Date.now();
-  </script>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
 </head>
 <body>
 
@@ -78,11 +77,6 @@
 <div class="toast" id="toast"></div>
 
 <script src="lib/lz-string.min.js"></script>
-<script>
-  // Auto cache-bust app.js
-  var s = document.createElement('script');
-  s.src = 'app.js?t=' + Date.now();
-  document.body.appendChild(s);
-</script>
+<script src="app.js"></script>
 </body>
 </html>
