@@ -237,8 +237,69 @@ function updateExpandAll(states) {
   btn.textContent = anyOpen ? 'Close all' : 'Expand all';
 }
 
-// ─── Open All Tabs (with extension bridge) ───────────────────────────────────
+// ─── Open All Tabs (with confirmation dialog) ───────────────────────────────
 function openAllTabs(session) {
+  const allTabs = session.tabs || [];
+  const urls = session.urls || [];
+  const tabCount = allTabs.length || urls.length;
+  const groups = getGroups(session);
+  const groupCount = groups.filter(g => g.name).length;
+
+  const hasExtension = typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.sendMessage;
+
+  // Build confirmation dialog
+  const overlay = document.createElement('div');
+  overlay.className = 'confirm-overlay';
+
+  let groupText = groupCount > 0 ? ` in ${groupCount} group${groupCount !== 1 ? 's' : ''}` : '';
+  let installHtml = '';
+  if (!hasExtension) {
+    installHtml = `
+      <div class="confirm-install">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:var(--text-faint)"><path d="M15.6 2.7a10 10 0 1 0 5.7 5.7"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        <div>
+          <div class="confirm-install-title">Install Sesh to preserve tab groups</div>
+          <div class="confirm-install-sub">Without the extension, tabs open individually without groups.</div>
+        </div>
+      </div>
+    `;
+  }
+
+  overlay.innerHTML = `
+    <div class="confirm-dialog">
+      <div class="confirm-title">Open ${tabCount} tabs?</div>
+      <div class="confirm-sub">This will open ${tabCount} tabs${groupText} from "${esc(session.name)}".</div>
+      ${installHtml}
+      <div class="confirm-buttons">
+        <button class="confirm-cancel">Cancel</button>
+        <button class="confirm-open">Open all tabs</button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+  requestAnimationFrame(() => overlay.classList.add('show'));
+
+  overlay.querySelector('.confirm-cancel').onclick = () => {
+    overlay.classList.remove('show');
+    setTimeout(() => overlay.remove(), 200);
+  };
+
+  overlay.onclick = (e) => {
+    if (e.target === overlay) {
+      overlay.classList.remove('show');
+      setTimeout(() => overlay.remove(), 200);
+    }
+  };
+
+  overlay.querySelector('.confirm-open').onclick = () => {
+    overlay.classList.remove('show');
+    setTimeout(() => overlay.remove(), 200);
+    doOpenTabs(session, hasExtension);
+  };
+}
+
+function doOpenTabs(session, hasExtension) {
   const payload = {
     action: 'openSession',
     name: session.name,
@@ -246,8 +307,7 @@ function openAllTabs(session) {
     urls: session.urls || []
   };
 
-  // Try extension first
-  if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.sendMessage) {
+  if (hasExtension) {
     try {
       chrome.runtime.sendMessage(EXTENSION_ID, payload, (response) => {
         if (chrome.runtime.lastError || !response || !response.success) {
@@ -257,9 +317,7 @@ function openAllTabs(session) {
         }
       });
       return;
-    } catch {
-      // Extension not available
-    }
+    } catch {}
   }
 
   fallbackOpen(session);
@@ -269,9 +327,8 @@ function fallbackOpen(session) {
   const tabs = session.tabs || [];
   const urls = session.urls || [];
   const allUrls = tabs.length > 0 ? tabs.map(t => t.url) : urls;
-
   allUrls.forEach(url => window.open(url, '_blank'));
-  showToast('Tabs opened! Install Sesh to open them as tab groups.');
+  showToast('Tabs opened!');
 }
 
 // ─── Error state ─────────────────────────────────────────────────────────────

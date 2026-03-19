@@ -483,6 +483,106 @@ footer .line {
   margin-bottom: 8px;
 }
 
+/* ─── Confirmation Dialog ─── */
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.confirm-overlay.show { opacity: 1; }
+
+.confirm-dialog {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 28px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.15), 0 2px 6px rgba(0,0,0,0.1);
+  transform: translateY(10px);
+  transition: transform 0.2s;
+}
+
+.confirm-overlay.show .confirm-dialog { transform: translateY(0); }
+
+.confirm-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.confirm-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.confirm-install {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  background: var(--tab-fav);
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.confirm-install-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.confirm-install-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.confirm-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.confirm-cancel {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.confirm-cancel:hover { color: var(--text); }
+
+.confirm-open {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--cta-btn-text);
+  background: var(--cta-btn-bg);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.confirm-open:hover { opacity: 0.85; }
+
 /* ─── Animation ─── */
 @keyframes cardIn {
   from { opacity: 0; transform: translateY(20px); }
